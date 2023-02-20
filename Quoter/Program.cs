@@ -51,7 +51,7 @@ namespace Quoter
 
         private static async Task DiscordReady(DiscordClient client, ReadyEventArgs e)
         {
-            await client.UpdateStatusAsync(new DiscordActivity("Cheese is good - George Washington"),
+            await client.UpdateStatusAsync(new DiscordActivity("Faded than a hoe - George Washington"),
                 UserStatus.Online);
         }
     }
