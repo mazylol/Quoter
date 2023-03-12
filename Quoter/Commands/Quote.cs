@@ -2,6 +2,7 @@ using DSharpPlus.Entities;
 using DSharpPlus.SlashCommands;
 using MongoDB.Bson;
 using MongoDB.Driver;
+using Quoter.Utils;
 
 namespace Quoter.Commands;
 
@@ -23,13 +24,13 @@ public class Quote : ApplicationCommandModule
 
             if (Enumerable.Any(cursor, document => document.Title == title))
             {
-                await ctx.CreateResponseAsync("A quote with that title already exists", true);
+                await ctx.CreateResponseAsync(Embed.Error("A quote with that title already exists!"), true);
                 return;
             }
 
             if (Enumerable.Any(cursor, document => document.Content == content))
             {
-                await ctx.CreateResponseAsync("A quote with that content already exists", true);
+                await ctx.CreateResponseAsync(Embed.Error("A quote with that content already exists!"), true);
                 return;
             }
 
@@ -43,7 +44,7 @@ public class Quote : ApplicationCommandModule
 
             collection?.InsertOneAsync(insert);
 
-            await ctx.CreateResponseAsync("Quote added successfully");
+            await ctx.CreateResponseAsync(Embed.Success("Quote added!"));
         }
 
         [SlashCommand("get", "Get a quote")]
@@ -55,7 +56,7 @@ public class Quote : ApplicationCommandModule
 
             if (!Enumerable.Any(cursor, document => document.Title == title))
             {
-                await ctx.CreateResponseAsync("A quote with that title does not exist", true);
+                await ctx.CreateResponseAsync(Embed.Error("A quote with that title does not exist!"), true);
                 return;
             }
 
@@ -81,7 +82,8 @@ public class Quote : ApplicationCommandModule
 
         [SlashCommand("list", "List all quotes from a creator")]
         public static async Task List(InteractionContext ctx,
-            [Option("creator", "The creator of the quote")] DiscordUser? creator = null)
+            [Option("creator", "The creator of the quote")]
+            DiscordUser? creator = null)
         {
             var collection = Db?.GetCollection<QuoteModel>(ctx.Guild.Id.ToString());
 
@@ -94,7 +96,7 @@ public class Quote : ApplicationCommandModule
 
             if (!Enumerable.Any(cursor, document => document.CreatorId == creator.Id))
             {
-                await ctx.CreateResponseAsync("That user has not submitted any quotes", true);
+                await ctx.CreateResponseAsync(Embed.Error("That user has not submitted any quotes!"), true);
                 return;
             }
 
@@ -113,7 +115,7 @@ public class Quote : ApplicationCommandModule
                     embed.AddField(quote.Title, $"*{quote.Content}*");
                 }
 
-                await ctx.CreateResponseAsync(embed.Build());
+                await ctx.CreateResponseAsync(embed.Build(), true);
             }
         }
 
@@ -128,7 +130,7 @@ public class Quote : ApplicationCommandModule
 
             if (!Enumerable.Any(cursor, document => document.Title == title))
             {
-                await ctx.CreateResponseAsync("A quote with that title does not exist", true);
+                await ctx.CreateResponseAsync(Embed.Error("A quote with that title does not exist!"), true);
                 return;
             }
 
@@ -136,22 +138,22 @@ public class Quote : ApplicationCommandModule
 
             if (ctx.User != await ctx.Client.GetUserAsync(quote.CreatorId))
             {
-                await ctx.CreateResponseAsync("You are not the creator of this quote", true);
+                await ctx.CreateResponseAsync(Embed.Error("You are not the creator of this quote!"), true);
                 return;
             }
 
             collection?.DeleteOneAsync(document => document.Title == title);
 
-            await ctx.CreateResponseAsync("Quote deleted successfully", true);
+            await ctx.CreateResponseAsync(Embed.Success("Quote deleted successfully"), true);
         }
     }
 }
 
 internal class QuoteModel
 {
-    public ObjectId Id { get; set; }
-    public ulong CreatorId { get; set; }
-    public string? Title { get; set; }
-    public string? Content { get; set; }
-    public ulong AuthorId { get; set; }
+    public ObjectId Id { get; init; }
+    public ulong CreatorId { get; init; }
+    public string? Title { get; init; }
+    public string? Content { get; init; }
+    public ulong AuthorId { get; init; }
 }
