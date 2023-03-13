@@ -12,7 +12,7 @@ jobs:
           name: Setup docker daemon
           command: |
             ssh remote-docker \<< EOF
-              sudo echo $DAEMON_CONFIG > /etc/docker/daemon.json
+              echo $DAEMON_CONFIG | sudo tee /etc/docker/daemon.json
             EOF
       - run:
           name: Login to registry
