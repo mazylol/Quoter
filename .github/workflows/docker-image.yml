@@ -13,3 +13,7 @@ jobs:
         run: touch .env && echo ${{ secrets.PROJECT_ENV }} > .env
       - name: Build the Docker image
         run: 'docker build -t quoter . -f Quoter/Dockerfile --tag quoter:$(date +%s)'
+      - name: Login to registry
+        run: echo ${{ secrets.REGISTRY_PASSWORD }} | docker login -u ${{ secrets.REGISTRY_USER }} --password-stdin
+      - name: Push the Docker image
+        run: docker push quoter
