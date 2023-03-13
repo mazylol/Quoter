@@ -15,5 +15,5 @@ RUN dotnet publish "Quoter.csproj" -c Release -o /app/publish
 FROM base AS final
 WORKDIR /app
 COPY --from=publish /app/publish .
-RUN cp .env /app
+COPY [".env", "/app"]
 ENTRYPOINT ["dotnet", "Quoter.dll"]
