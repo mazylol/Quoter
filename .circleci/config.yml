@@ -13,8 +13,6 @@ jobs:
           command: |
             ssh remote-docker \<< EOF
               sudo echo $DAEMON_CONFIG > /etc/docker/daemon.json
-              sudo systemctl daemon-reload
-              sudo systemctl restart docker.service
             EOF
       - run:
           name: Login to registry
