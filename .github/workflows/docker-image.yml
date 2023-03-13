@@ -10,7 +10,7 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - name: Modify docker config
-        run: 'sudo touch /etc/docker/daemon.json && sudo echo { "insecure-registries": ["${{ secrets.REGISTRY_IP }}"] }'
+        run: 'sudo touch /etc/docker/daemon.json && sudo echo { "insecure-registries": ["${{ secrets.REGISTRY_IP }}"] } > /etc/docker/daemon.json'
       - name: Setup environment
         run: touch .env && echo ${{ secrets.PROJECT_ENV }} > .env
       - name: Build the Docker image
