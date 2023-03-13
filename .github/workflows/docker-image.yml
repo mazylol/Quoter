@@ -9,5 +9,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
+      - name: Setup environment
+        run: touch .env && echo ${{ secrets.PROJECT_ENV }} > .env
       - name: Build the Docker image
-        run: 'docker build -t quoter . -f Quoter/Dockerfile --tag quoter:$(date +%s) '
+        run: 'docker build -t quoter . -f Quoter/Dockerfile --tag quoter:$(date +%s)'
