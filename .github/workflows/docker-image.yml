@@ -9,6 +9,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
+      - name: Setup docker daemon
+        run: sudo echo ${{ secrets.REGISTRY_CONFIG }} > /etc/docker/daemon.json
       - name: Setup environment
         run: echo ${{ secrets.PROJECT_ENV }} > .env
       - name: Build the Docker image
