@@ -11,6 +11,7 @@ jobs:
       - run:
           name: Setup docker daemon
           command: |
+            sudo mkdir -p /etc/docker
             sudo echo {"insecure-registries" : [ "$REGISTRY_IP" ]} >> /etc/docker/daemon.json
       - run:
           name: Login to registry
