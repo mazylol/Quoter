@@ -1,0 +1,23 @@
+version: 2
+
+jobs:
+  build:
+    working_directory: /app
+    docker:
+      - image: docker:23.0-git
+    steps:
+      - checkout
+      - setup_remote_docker
+      - run:
+          name: Setup docker daemon
+          command: |
+            sudo echo {"insecure-registries" : [ "$REGISTRY_IP" ]} >> /etc/docker/daemon.json
+      - run:
+          name: Login to registry
+          command: |
+            docker login $REGISTRY_IP -u $REGISTRY_USER -p $REGISTRY_PASSWORD
+
+workflows:
+  build-and-push:
+    jobs:
+      - build
