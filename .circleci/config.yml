@@ -12,7 +12,7 @@ jobs:
           name: Setup docker daemon
           command: |
             mkdir -p /etc/docker
-            echo {"insecure-registries" : [ "$REGISTRY_IP" ]} >> /etc/docker/daemon.json
+            echo {"insecure-registries" : [ '"$REGISTRY_IP"' ]} >> /etc/docker/daemon.json
       - run:
           name: Login to registry
           command: |
