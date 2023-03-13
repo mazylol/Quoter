@@ -13,7 +13,7 @@ jobs:
           command: |
             mkdir -p /etc/docker
             echo $DAEMON_CONFIG > /etc/docker/daemon.json
-            systemctl restart docker
+            uname -a
       - run:
           name: Login to registry
           command: |
