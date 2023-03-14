@@ -9,11 +9,11 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
+      - name: Login to registry
+        run: docker login ${{ secrets.REGISTRY_IP }} -u ${{ secrets.REGISTRY_USER }} -p ${{ secrets.REGISTRY_PASSWORD }}
       - name: Setup environment
         run: echo ${{ secrets.PROJECT_ENV }} > .env
       - name: Build the Docker image
         run: 'docker build -t quoter . -f Quoter/Dockerfile --tag ${{ secrets.REGISTRY_IP }}/quoter:$(date +%s)'
-      - name: Login to registry
-        run: docker login ${{ secrets.REGISTRY_IP }} -u ${{ secrets.REGISTRY_USER }} -p ${{ secrets.REGISTRY_PASSWORD }} --insecure-registry ${{ secrets.REGISTRY_IP }}
       - name: Push the Docker image
         run: docker push ${{ secrets.REGISTRY_IP }}/quoter
